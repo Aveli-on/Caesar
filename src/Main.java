@@ -12,148 +12,60 @@ public class Main {    public static void main(String[] args) {
         int function=scan.nextInt();scan.nextLine();
         int key=0;
         exit = "";
-        confirm = "";
-        outFileName = "";
-        String inText = "";
+        System.out.println("Введите путь к файлу");
+
+        outFileName = scan.nextLine();
+        //C:\\Users\\sava2\\IdeaProjects\\Caesar\\Final.txt
+        //C:\Users\sava2\Downloads\ТЗ.txt
+        NewFileReader ReadFile= new NewFileReader(outFileName);
+        String inText = ReadFile.readFile();
+if(inText==null)break;
+        Cod cod;
         String outText = "";
-        outerloop:while (!Objects.equals(String.valueOf(confirm), "yes")) {
-            try {
-
-               /*
-               C://Users//sava2//Downloads//ТЗ.txt
-               C://Users//sava2//IdeaProjects//Caesar//Final.txt
-               * */
-                File myFile = new File("C://Users//sava2//IdeaProjects//Caesar//Final.txt");
-                FileInputStream inputStream = new FileInputStream(myFile);
-                byte[] buffer = new byte[1024];
-                int bytesRead;
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    System.out.print(new String(buffer, 0, bytesRead));
-                    inText += new String(buffer, 0, bytesRead);
-                }
-                inputStream.close();
-            } catch (Exception o) {
-                System.out.println(o.getMessage());
-                break outerloop;
-
+        System.out.println(inText);
+        if(function!=3){
+            while (key<=0|key>31) {
+                System.out.println("Введите ключ сдвига(1-31)");
+                key = scan.nextInt();
+                scan.nextLine();
             }
-            System.out.println();
-            System.out.println("Это правильный файл?(yes/no)");
-            confirm = scan.nextLine();
         }
-        if(function!=3){ System.out.println("Введите ключ сдвига");
-        key = scan.nextInt();
-        scan.nextLine();}
         //обработка текста
+        cod=new Cod(inText,key);
         switch (function){
             case 1:
-                for (int i = 0; i < inText.length(); i++) {
-                    if ((int) inText.charAt(i) >= 1040 & (int) inText.charAt(i) <= 1071) {
-                        outText += (char) (((int) inText.charAt(i) + key - 1040) % 32 + 1040);
-                    } else if ((int) inText.charAt(i) > 1071& (int) inText.charAt(i) <= 1103) {
-                        outText += (char) (((int) inText.charAt(i) + key - 1072) % 32+ 1072);
-                    } else if ((int) inText.charAt(i) == 32) {
-                        outText += ' ';
-                    } else if ((int) inText.charAt(i) == (int) 'ё') {
-                        outText += (char) (((int) 'е' + key - 1072) % 32 + 1072);
-                    } else if ((int) inText.charAt(i) == (int) 'Ё') {
-                        outText += (char) (((int) 'Е' + key - 1040) % 32 + 1040);
-                    }
-                }
+                outText= cod.coding();
                 break;
             case 2:
-                for (int i = 0; i < inText.length(); i++) {
-                    if ((int) inText.charAt(i) >= 1040 & (int) inText.charAt(i) <= 1071) {
-                        if ((int) inText.charAt(i)-key>=1040)
-                        outText += (char) ((int) inText.charAt(i)-key );
-                        else {
-                            outText += (char) (1072-Math.abs((int) inText.charAt(i)-key-1040) );
-                        }
-                    } else if ((int) inText.charAt(i) > 1071& (int) inText.charAt(i) <= 1103) {
-                        if ((int) inText.charAt(i)-key>=1072)
-                            outText += (char) ((int) inText.charAt(i)-key );
-                        else {
-                            outText += (char) (1104-Math.abs((int) inText.charAt(i)-key-1072) );
-                        }
-                    }
-
-                    else if ((int) inText.charAt(i) == 32) {
-                        outText += ' ';
-                    }
-                }
+               outText=cod.decoding();
                 break;
             case 3:
                 String[] masString=inText.split(" ");
                 String BrutForce="";
+                String outBrut="";
+                Cod brut;
                 for (int i = 0; i < masString.length/2; i++) {
                     BrutForce+=masString[i]+" ";
                 }
-
-                for (int j = 1; j <31 ; j++) {
-                    String outBrut="";
-                    for (int i = 0; i < BrutForce.length(); i++) {
-                        if ((int) BrutForce.charAt(i) >= 1040 & (int) BrutForce.charAt(i) <= 1071) {
-                            if ((int) BrutForce.charAt(i)-j>=1040)
-                                outBrut += (char) ((int) BrutForce.charAt(i)-j );
-                            else {
-                                outBrut += (char) (1072-Math.abs((int) BrutForce.charAt(i)-j-1040) );
-                            }
-                        } else if ((int) BrutForce.charAt(i) > 1071& (int) BrutForce.charAt(i) <= 1103) {
-                            if ((int) BrutForce.charAt(i)-j>=1072)
-                                outBrut += (char) ((int) BrutForce.charAt(i)-j );
-                            else {
-                                outBrut += (char) (1104 - Math.abs((int) BrutForce.charAt(i) - j - 1072));
-                            }
-                        } else if ((int) BrutForce.charAt(i) == 32) {
-                            outBrut += ' ';
-                        }
-
-                    }
+                for (int j = 1; j <32 ; j++) {
+                    brut=new Cod(BrutForce,j);
+                    outBrut=brut.decoding();
                     System.out.println("Сдвиг "+j+".\n"+outBrut);
                 }
-                System.out.println("Введите ключ сдвига");
-                key = scan.nextInt();
-                scan.nextLine();
-                for (int i = 0; i < inText.length(); i++) {
-                    if ((int) inText.charAt(i) >= 1040 & (int) inText.charAt(i) <= 1071) {
-                        if ((int) inText.charAt(i)-key>=1040)
-                            outText += (char) ((int) inText.charAt(i)-key );
-                        else {
-                            outText += (char) (1072-Math.abs((int) inText.charAt(i)-key-1040) );
-                        }
-                    } else if ((int) inText.charAt(i) > 1071& (int) inText.charAt(i) <= 1103) {
-                        if ((int) inText.charAt(i)-key>=1072)
-                            outText += (char) ((int) inText.charAt(i)-key );
-                        else {
-                            outText += (char) (1104-Math.abs((int) inText.charAt(i)-key-1072) );
-                        }
-                    }
-
-                    else if ((int) inText.charAt(i) == 32) {
-                        outText += ' ';
-                    }
+                while (key<=0|key>31) {
+                    System.out.println("Введите ключ сдвига(1-31)");
+                    key = scan.nextInt();
+                    scan.nextLine();
                 }
+                brut=new Cod(inText,key);
+                outText= brut.decoding();
         }
-
-
-
     System.out.println("Введите название файла для записи в него результата");
     outFileName = scan.nextLine()+".txt";
     System.out.println();
-    File myFile = new File(outFileName);
-    try {
-        boolean success = myFile.createNewFile();
-    } catch (Exception o) {
-        System.out.println(o.getMessage());
-        continue;
-    }
-    try (FileWriter FileOutWrite = new FileWriter(myFile, false)) {
-        FileOutWrite.write(outText);
-    } catch (Exception o) {
-        System.out.println(o.getMessage());
-        continue;
-    }
-    System.out.println("Файл успешно записан, чтобы выйти введите exit, либо введите любую клавишу,чтобы продолжить");
+    NewFile outFile=new NewFile(outFileName,outText);
+    if(outFile.writeFile()) System.out.println("Файл успешно записан, чтобы выйти введите exit, либо введите любую клавишу,чтобы продолжить");
+
     exit = scan.nextLine();
 }
 }

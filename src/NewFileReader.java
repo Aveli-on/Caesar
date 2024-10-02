@@ -18,12 +18,13 @@ public class NewFileReader {
         byte[] buffer = new byte[1024];
         int bytesRead;
         while ((bytesRead = inputStream.read(buffer)) != -1) {
-            System.out.print(new String(buffer, 0, bytesRead));
+            //System.out.print(new String(buffer, 0, bytesRead));
             inText += new String(buffer, 0, bytesRead);
         }
             inputStream.close();
         } catch (Exception o) {
             System.out.println(o.getMessage());
+            inText = null;
         }
         return inText;
     }
